@@ -3,7 +3,21 @@ var router = express.Router();
 var fs = require('fs');
 var readData = require('./readData.js');
 var dbpath=require('./dbpath.js');
-var lib = require('./lib.js')
+var lib = require('./lib.js');
+var MongoClient = require('mongodb').MongoClient
+var assert = require('assert');
+
+//Connect URL
+var url = 'mongodb://localhost:27017/project_todo';
+
+//Use connect method to connect to the server
+
+MongoClient.connect(url,function(err,db){
+    assert.equal(null,err);
+    console.log("Connected successfully to server");
+
+    db.close();
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
