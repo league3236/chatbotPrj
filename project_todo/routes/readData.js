@@ -1,13 +1,9 @@
-var fs = require('fs');
+module.exports=function(database,callback){
+    var collection = databse.collection('testCallection');
 
-module.exports=function(path,fn){
+    collection.find({}).toArray(function(err,result){
+        console.log("Found the following records");
 
-    fs.readFile(path,function(err,data){
-
-        if(data==(''||null)){
-            fn(err,data);
-        }else{
-            fn(err,JSON.parse(data));
-        }
+         callback(err,result);
     });
 }
