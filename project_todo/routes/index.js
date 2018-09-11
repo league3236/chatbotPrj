@@ -8,7 +8,7 @@ var MongoClient = require('mongodb').MongoClient
 var assert = require('assert');
 
 //Connect URL
-var url = 'mongodb://localhost:27017/project_todo';
+var dbUrl = 'mongodb://localhost:27017/project_todo';
 
 //Use connect method to connect to the server
 
@@ -21,10 +21,22 @@ MongoClient.connect(url,function(err,db){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  readData(dbpath,function(err,data){
+    MongoClient.connect(dbUrl, function(err,db){
+        //Get a collection
+        var collection = db.collection('testCollection');
+
+        collection.find({}).toArray(function(err,result){
+            assert.equal(err,null);
+            db.close();
+            res.render('index',{todo:result});
+        });
+    });
+/*
+    readData(dbpath,function(err,data){
       if(err) throw err;
        res.render('index',{todo:data});
   })
+  */
 });
 
 router.post('/task-register',function(req,res){
