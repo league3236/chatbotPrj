@@ -1,43 +1,39 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var readData = require('./readData.js');
+var readData = require('./Modules/readData.js');
 var dbpath=require('./dbpath.js');
 var lib = require('./lib.js');
 var MongoClient = require('mongodb').MongoClient
 var assert = require('assert');
+var config = require('./Modules/config.js');
+
 
 //Connect URL
-var dbUrl = 'mongodb://localhost:27017/project_todo';
+//var dbUrl = config.dbUrl;
+var url='mongodb://localhost:27017/project_todo';
 
 //Use connect method to connect to the server
-
-MongoClient.connect(url,function(err,db){
+MongoClient.connect(url,{ useNewUrlParser: true },function(err,db){
     assert.equal(null,err);
     console.log("Connected successfully to server");
 
     db.close();
 });
 
-/* GET home page. */
+/*
 router.get('/', function(req, res, next) {
     MongoClient.connect(dbUrl, function(err,db){
-        //Get a collection
-        var collection = db.collection('testCollection');
-
-        collection.find({}).toArray(function(err,result){
-            assert.equal(err,null);
-            db.close();
-            res.render('index',{todo:result});
-        });
+       readData(dbUrl,function(err,data){
+           assert.equal(err,null);
+           dbUrl.close();
+           res.render('index',{todo:data});
+       });
     });
-/*
-    readData(dbpath,function(err,data){
-      if(err) throw err;
-       res.render('index',{todo:data});
-  })
-  */
 });
+*/
+
+/*
 
 router.post('/task-register',function(req,res){
     var task=[];
@@ -97,5 +93,7 @@ router.post('/task-done', function(req, res) {
     });
     res.redirect('/');
 });
+
+*/
 
 module.exports = router;
