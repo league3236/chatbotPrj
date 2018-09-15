@@ -11,27 +11,34 @@ var config = require('./Modules/config.js');
 
 //Connect URL
 //var dbUrl = config.dbUrl;
-var url='mongodb://localhost:27017/project_todo';
+var dbUrl='mongodb://localhost:27017/project_todo';
 
 //Use connect method to connect to the server
-MongoClient.connect(url,{ useNewUrlParser: true },function(err,db){
+MongoClient.connect(dbUrl,{ useNewUrlParser: true },function(err,db){
     assert.equal(null,err);
     console.log("Connected successfully to server");
 
     db.close();
 });
 
-/*
+
 router.get('/', function(req, res, next) {
-    MongoClient.connect(dbUrl, function(err,db){
-       readData(dbUrl,function(err,data){
-           assert.equal(err,null);
-           dbUrl.close();
-           res.render('index',{todo:data});
-       });
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true },function(err,database){
+        if(err) throw err;
+
+        var db= database.db('local'); //mongodb 3.0 이상일 경우 데이터베이스 이름 명시해야??
+
+        var collection = db.collection("testCollection");
+    /* 
+        readData(db, function(err, data){
+            if(err) throw err;
+            res.render('index', {todo:data});
+        });
+         */
+        database.close();
     });
 });
-*/
+
 
 /*
 
