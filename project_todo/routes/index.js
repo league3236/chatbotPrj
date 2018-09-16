@@ -21,6 +21,11 @@ var todoSchema = mongoose.Schema({
 
 var todo = mongoose.model("todo",todoSchema,'testCollection');
 
+//map
+router.get('/map',function(req,res,next){
+        res.render('map');
+});
+
 //find
 router.get('/',function(req,res,next){
     todo.find({},function(err,docs){
