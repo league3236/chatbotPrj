@@ -4,11 +4,21 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+//mongoose connecte
+
+var mongoose = require('mongoose');
+var config = require('./routes/Modules/config.js');
+mongoose.connect(config.dbUrl());
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open',function(){
+    console.log("we're connected!");
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,5 +54,4 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 module.exports = app;
