@@ -1,32 +1,21 @@
-<!DOCTYPE html>
 <html>
-        <script>
-                function getLocation() {
-                    consoe.log("이렇게 하는거 맞니?");
-                    if (navigator.geolocation) { // GPS를 지원하면
-                        consoe.log("1");
-                        navigator.geolocation.getCurrentPosition(function (position) {
-                            alert(position.coords.latitude + ' ' + position.coords.longitude);
-                        }, function (error) {
-                            console.error(error);
-                        }, {
-                                enableHighAccuracy: false,
-                                maximumAge: 0,
-                                timeout: Infinity
-                            });
-                    } else {
-                        consoe.log("2");
-                        alert('GPS를 지원하지 않습니다');
-                    }
-                }
-        </script>
 <body>
-    <script>        
-    getLocation();
-
+    <p>Click the button to get your coordinates.</p>
+    <button onclick="getLocation()">Try It</button>
+    <p id="demo"></p>
+    <script type="text/javascript">
+        var x = document.getElementById("demo");
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+        function showPosition(position) {
+            x.innerHTML = "Latitude: " + position.coords.latitude +
+                "<br>Longitude: " + position.coords.longitude;
+        }
     </script>
-    <% consoe.log("이렇게 하는거 맞니?") %>
 </body>
-
 </html>
-
