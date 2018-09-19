@@ -9,6 +9,35 @@ var bodyParser = require('body-parser');
 
 //express 객체를 app 변수에 저장
 var app = express();
+var Client = require('mongodb').MongoClient;
+
+//mongoose
+var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+var dbUrl = "mongodb://ldcc:1234@localhost:27017/project_todo";
+
+mongoose.connect(dbUrl);
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open',function(){
+    console.log("we're connected!");
+});
+
+//schema
+var todoSchema = mongoose.Schema({
+    date:Date,
+    task:String,
+    done:Boolean
+});
+var todo = mongoose.model("todo",todoSchema,'testCollection');
+
+//test
+    todo.find({},function(err,docs){
+        console.log(docs);
+        console.log("hi");
+    });
+
 
 //body-parser 미들웨어 사용
 app.use(bodyParser.urlencoded({extended: false}));
