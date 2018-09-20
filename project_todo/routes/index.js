@@ -23,7 +23,13 @@ var todo = mongoose.model("todo",todoSchema,'testCollection');
 
 //map
 router.get('/map',function(req,res,next){
-        res.render('map');
+    res.render('map');
+});
+
+//mapview
+router.get('/mapview',function(req,res,next){
+    console.log(req);
+    res.render('mapview');
 });
 
 //find
@@ -70,5 +76,6 @@ router.post('/task-done',function(req,res){
         res.redirect('/');
       });
 });
+
 
 module.exports = router;
