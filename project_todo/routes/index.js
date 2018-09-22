@@ -26,10 +26,11 @@ router.get('/map',function(req,res,next){
     res.render('map');
 });
 
-//mapview
+//mapview  /:latitude/:longitude
 router.get('/mapview',function(req,res,next){
-    console.log(req);
-    res.render('mapview');
+    console.log(req.param(""));
+    res.send(req.params.latitude+','+req.params.longitude);
+    //res.render('mapview');
 });
 
 //find
@@ -40,28 +41,22 @@ router.get('/',function(req,res,next){
         res.render('index',{todo:docs});
     });
 });
-
 //save
 router.post('/task-register',function(req,res){
     var date = new Date(req.body.date);
     var newTask = req.body.task;
     var obj = {"date":date, "task":newTask, "done":false};
-
     //mongoose
     var task = new todo(obj);
     task.save(function(err){
         if(err) console.log(err);
         res.redirect('/');
     });
-
 });
-
 //update
 router.post('/task-done',function(req,res){
     var checked=req.body.checked;
-
     var objectId = [];
-
     if(lib.isArray(checked)){
         for(var i=0; i<checked.length;i++){
             objectId.push(checked[i]);
@@ -69,13 +64,10 @@ router.post('/task-done',function(req,res){
     }else{
         objectId.push(checked);
     }
-
     /* mongoose */
     todo.update({'_id':{$in:objectId}}, {$set:{'done':true}}, {multi:true}, function(err){
         if(err) console.log(err);
         res.redirect('/');
       });
 });
-
-
 module.exports = router;
