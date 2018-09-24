@@ -1,7 +1,9 @@
 <html>
 <body>
     <p>Click the button to get your coordinates.</p>
-    <button onclick="getLocation()">Try It</button>
+    <button onclick="getLocation()">getLocation</button>
+    <button onclick="sendLocation()">sendLocation</button>
+    
     <p id="demo"></p>
     <script type="text/javascript">
         var x = document.getElementById("demo");
@@ -12,9 +14,21 @@
                 x.innerHTML = "Geolocation is not supported by this browser.";
             }
         }
+        function sendLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(movePage);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
         function showPosition(position) {
             x.innerHTML = "Latitude: " + position.coords.latitude +
                 "<br>Longitude: " + position.coords.longitude;
+        }
+        function movePage(position){
+            console.log("/mapview/"+position.coords.latitude+"/"+position.coords.longitude);
+            location.href = "/mapview/"+position.coords.latitude+"/"+position.coords.longitude;
+            //location.href = "/";
         }
     </script>
 </body>

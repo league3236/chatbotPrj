@@ -1,9 +1,42 @@
 <!DOCTYPE html>
 <html>
   <body>
-      <p>date : <%=todo.date%></p>
-      <p>task : <%=todo.task%></p>
-      <p>done : <%=todo.done%></p>
+
+<h1>LOGIN</h1>
+<form action="/login" method="post">
+  <div>
+    <label>Username:</label>
+    <input type="text" name="username"/>
+  </div>
+  <div>
+    <label>Password:</label>
+    <input type="password" name="password"/>
+  </div>
+  <div>
+    <input type="submit" value="Log In"/>
+  </div>
+</form>
+
+<h1>SIGNUP</h1>
+<form action="/signup" method="post">
+  <div>
+    <label>Username:</label>
+    <input type="text" name="name"/>
+  </div>
+  <div>
+    <label>email:</label>
+    <input type="text" name="email"/>
+  </div>
+  <div>
+    <label>Password:</label>
+    <input type="password" name="password"/>
+  </div>
+  <div>
+    <input type="submit" value="Signup"/>
+  </div>
+</form>
+
+
       <form action="/task-register" method="post" autocomplete="on">
         <div class="form-group">
           <label>날짜<label>
@@ -15,19 +48,53 @@
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
-
       <form action="/task-done" method="post">
         <div>
-          <label>
+          <table border = "2">
+	<tr>
+	   <th>선택</th>
+	   <th>예약시간</th>
+ 	   <th>예약자</th>
+ 	   <th>예약번호</th>
+ 	   <th>인원</th>
+ 	   <th>메모</th>
+ 	   <th>마감여부</th>
+	</tr>
+	
             <% if(todo!=(null&&"")){
                todo.forEach(function(todo){ %>
-               <input type="checkbox" name="checked" value="<%=todo.id%>"> 
-                  <%= todo.task %> / until <%= todo.date %> / finish <%=todo.done%><br>
+	<tr>
+	   <td>
+               <input type="checkbox" name="checked" value="<%=todo.id%>">
+	   </td>
+	   <td> 
+                  <%= todo.date %>
+	   </td> 
+
+	   <td> 
+                  <%= todo.name %>
+	   </td>
+	   <td> 
+                  <%= todo.phone %>
+	   </td>
+	   <td> 
+                  <%= todo.personnel %>
+	   </td>
+	   <td> 
+                  <%= todo.task %>
+	   </td>
+	   <td> 
+                  <%= todo.done %>
+	   </td>
+	</tr>
             <% });
             } else { %>
+	<tr>
                <p>등록된 일정이 없습니다</p>
+	</tr>
             <%}%>
-        </label>
+
+        </table>
         </div>
         <button type="submit">done</button>
     </form>

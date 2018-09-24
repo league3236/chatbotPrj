@@ -8,6 +8,8 @@ var MongoClient = require('mongodb').MongoClient
 var assert = require('assert');
 var config = require('./Modules/config.js');
 var mongoose = require('mongoose');
+var passport = require('passport');
+
 mongoose.Promise = global.Promise;
 
 var dbUrl =config.dbUrl();
@@ -15,11 +17,37 @@ var dbUrl =config.dbUrl();
 //mongoose..
 var todoSchema = mongoose.Schema({
     date:Date,
+    name:String,
+    phone:String,
+    personnel:Number, 
     task:String,
     done:Boolean
 });
 
 var todo = mongoose.model("todo",todoSchema,'testCollection');
+//로그인 확인 소스 추 후에 옮겨야함
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()){
+        return next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
+router.get('/profile', isLoggedIn, function(req, res, next) {
+    res.render('index', { title: 'You are logged in.' });
+});
+
+router.post('/signup', passport.authenticate('signup', {
+    successRedirect : '/profile', 
+    failureRedirect : '/', //가입 실패시 redirect할 url주소
+    failureFlash : true 
+}))
+router.post('/login', passport.authenticate('login', {
+    successRedirect : '/profile', 
+    failureRedirect : '/', //로그인 실패시 redirect할 url주소
+    failureFlash : true 
+}))
 
 //map
 router.get('/map',function(req,res,next){
@@ -27,25 +55,29 @@ router.get('/map',function(req,res,next){
 });
 
 //mapview  /:latitude/:longitude
-router.get('/mapview',function(req,res,next){
-    console.log(req.param(""));
-    res.send(req.params.latitude+','+req.params.longitude);
-    //res.render('mapview');
+router.get('/mapview/:latitude/:longitude',function(req,res,next){
+    res.render('mapview',{latitude:req.params.latitude,longitude:req.params.longitude});
 });
 
 //find
 router.get('/',function(req,res,next){
-    todo.find({},function(err,docs){
+    todo.find({}).sort({date:1}).exec(function(err,docs){
+
+	if (err) throw err;
+
         console.log(docs);
-        console.log("hi");
         res.render('index',{todo:docs});
     });
 });
 //save
 router.post('/task-register',function(req,res){
     var date = new Date(req.body.date);
+    var name = req.body.name;
+    var phone = req.body.phone;
+    var personnel = req.body.personnel;
     var newTask = req.body.task;
-    var obj = {"date":date, "task":newTask, "done":false};
+
+    var obj = {"date":date,"name":name,"phone":phone,"personnel":personnel, "task":newTask, "done":false};
     //mongoose
     var task = new todo(obj);
     task.save(function(err){

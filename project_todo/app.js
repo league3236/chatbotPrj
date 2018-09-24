@@ -8,9 +8,11 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+//passport 
+var passport = require('passport');
 //mongoose connecte
-
 var mongoose = require('mongoose');
+
 var config = require('./routes/Modules/config.js');
 mongoose.connect(config.dbUrl());
 
@@ -19,7 +21,22 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open',function(){
     console.log("we're connected!");
 });
+//passport
+require('./config/passport')(passport);
 
+app.use(passport.initialize());
+app.use(passport.session()); //로그인 세션 유지
+
+//플레시 메세지를 사용한다면 
+var flash = require('connect-flash');
+app.use(flash());
+//express -session 설치
+var session = require('express-session');
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+}));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
