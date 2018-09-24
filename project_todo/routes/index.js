@@ -34,20 +34,22 @@ function isLoggedIn(req, res, next) {
     }
 }
 
+router.post('/signup', passport.authenticate('signup', {
+    successRedirect : '/profile', 
+    failureRedirect : '/map', //가입 실패시 redirect할 url주소
+    failureFlash : true 
+}));
+
+router.post('/login', passport.authenticate('login', {
+    successRedirect : '/profile', 
+    failureRedirect : '/map', //로그인 실패시 redirect할 url주소
+    failureFlash : true 
+}));
+
+
 router.get('/profile', isLoggedIn, function(req, res, next) {
     res.render('index', { title: 'You are logged in.' });
 });
-
-router.post('/signup', passport.authenticate('signup', {
-    successRedirect : '/profile', 
-    failureRedirect : '/', //가입 실패시 redirect할 url주소
-    failureFlash : true 
-}))
-router.post('/login', passport.authenticate('login', {
-    successRedirect : '/profile', 
-    failureRedirect : '/', //로그인 실패시 redirect할 url주소
-    failureFlash : true 
-}))
 
 //map
 router.get('/map',function(req,res,next){
@@ -65,7 +67,6 @@ router.get('/',function(req,res,next){
 
 	if (err) throw err;
 
-        console.log(docs);
         res.render('index',{todo:docs});
     });
 });

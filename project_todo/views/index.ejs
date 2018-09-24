@@ -2,6 +2,16 @@
 <html>
   <body>
 
+      <%
+      function dataFormatChange(date) {
+          var options = {
+              weekday: "short", year: "numeric", month: "short",
+              day: "numeric", hour: "2-digit", minute: "2-digit"
+          };
+          return date.toLocaleTimeString("ko-KR", options);
+      }
+      %>
+
 <h1>LOGIN</h1>
 <form action="/login" method="post">
   <div>
@@ -68,9 +78,8 @@
                <input type="checkbox" name="checked" value="<%=todo.id%>">
 	   </td>
 	   <td> 
-                  <%= todo.date %>
+                  <%=dataFormatChange(todo.date)%>
 	   </td> 
-
 	   <td> 
                   <%= todo.name %>
 	   </td>
