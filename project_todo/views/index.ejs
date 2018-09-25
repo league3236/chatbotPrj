@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <body>
-
       <%
       function dataFormatChange(date) {
           var options = {
@@ -11,7 +10,8 @@
           return date.toLocaleTimeString("ko-KR", options);
       }
       %>
-
+<h2><%= message %></h2>
+<h2><%= title %></h2>
 <h1>LOGIN</h1>
 <form action="/login" method="post">
   <div>

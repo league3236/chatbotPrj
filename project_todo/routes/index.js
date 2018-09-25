@@ -30,25 +30,25 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()){
         return next();
     } else {
-        res.redirect('/login');
+        res.redirect('/profile');
     }
 }
 
 router.post('/signup', passport.authenticate('signup', {
     successRedirect : '/profile', 
-    failureRedirect : '/map', //가입 실패시 redirect할 url주소
+    failureRedirect : '/', //가입 실패시 redirect할 url주소
     failureFlash : true 
 }));
 
 router.post('/login', passport.authenticate('login', {
     successRedirect : '/profile', 
-    failureRedirect : '/map', //로그인 실패시 redirect할 url주소
-    failureFlash : true 
+    failureRedirect : '/', //로그인 실패시 redirect할 url주소
+    failureFlash : true
 }));
 
 
-router.get('/profile', isLoggedIn, function(req, res, next) {
-    res.render('index', { title: 'You are logged in.' });
+router.get('/profile', function(req, res, next) {
+    res.render('test', { title: 'You are logged in.'  });
 });
 
 //map
@@ -67,7 +67,7 @@ router.get('/',function(req,res,next){
 
 	if (err) throw err;
 
-        res.render('index',{todo:docs});
+        res.render('index',{title:'Express',todo:docs,message:req.params.message});
     });
 });
 //save
@@ -103,4 +103,5 @@ router.post('/task-done',function(req,res){
         res.redirect('/');
       });
 });
+
 module.exports = router;

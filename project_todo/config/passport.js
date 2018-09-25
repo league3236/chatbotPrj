@@ -9,13 +9,16 @@ module.exports = function(passport) {
             done(err, user);
         });
     });
-    //프로그램 작성
+    
+
+
     passport.use('signup', new LocalStrategy({
         usernameField : 'email',
         passwordField : 'password',
         passReqToCallback : true 
     },
     function(req, email, password, done) {
+        console.log(email+'----------');
         User.findOne({ 'email' : email }, function(err, user) {
             if (err) return done(err);
             if (user) {
@@ -34,22 +37,28 @@ module.exports = function(passport) {
         });
     }));
 
+
     passport.use('login', new LocalStrategy({
         usernameField : 'email',
         passwordField : 'password',
         passReqToCallback : true 
     },
-    function(req, email, password, done) { 
+    function(req, email, password, done) {
+        console.log("에초에 들어오긴 하냐"); 
         User.findOne({ 'email' : email }, function(err, user) {
-            if (err)
-                return done(err);
-            if (!user)
-                return done(null, false, req.flash('loginMessage', '사용자를 찾을 수 없습니다.'));
-            if (!user.validPassword(password))
-                return done(null, false, req.flash('loginMessage', '비밀번호가 다릅니다.')); 
+            if (err){
+                console.log('여기들어옴1');
+                return done(err,{ message: '에러발생.' });
+            }
+            if (!user){
+                console.log('여기들어옴2');
+                return done(null, false, { message: '사용자를 찾을 수 없습니다.' });
+            }
+            if (!user.validPassword(password)){
+                console.log('여기들어옴3');
+                return done(null, false, { message: '비밀번호가 다릅니다.' });
+            } 
             return done(null, user);
         });
     }));
-    
-
 };

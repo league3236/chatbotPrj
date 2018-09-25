@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
+var session = require('express-session')
+var flash = require('connect-flash');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -15,8 +17,10 @@ var mongoose = require('mongoose');
 
 var config = require('./routes/Modules/config.js');
 mongoose.connect(config.dbUrl());
+mongoose.Promise = global.Promise;
 
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open',function(){
     console.log("we're connected!");
@@ -24,12 +28,18 @@ db.once('open',function(){
 //passport
 require('./config/passport')(passport);
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+//내가 추가할거임 
+app.engine('html', require('ejs').renderFile);
+
+
 app.use(passport.initialize());
 app.use(passport.session()); //로그인 세션 유지
-
 //플레시 메세지를 사용한다면 
-var flash = require('connect-flash');
 app.use(flash());
+
 //express -session 설치
 var session = require('express-session');
 app.use(session({
@@ -37,11 +47,6 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-//내가 추가할거임 
-app.engine('html', require('ejs').renderFile);
 
 app.use(logger('dev'));
 app.use(express.json());
