@@ -10,8 +10,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
-//passport 
-var passport = require('passport');
 //mongoose connecte
 var mongoose = require('mongoose');
 
@@ -25,8 +23,6 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open',function(){
     console.log("we're connected!");
 });
-//passport
-require('./config/passport')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,8 +31,6 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
 
-app.use(passport.initialize());
-app.use(passport.session()); //로그인 세션 유지
 //플레시 메세지를 사용한다면 
 app.use(flash());
 
@@ -52,6 +46,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),

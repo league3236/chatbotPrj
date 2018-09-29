@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            Dalkom Login
+        </title>
+    </head>
+    <body>
+        <%-JSON.stringify(session)%>
+        <form action="/login" method="post">
+            <label for="id">ID</label>
+            <input id="id" name="id" type="text" placeholder="ID를 입력해주세요">
+            <br/>
+            <label for="pw">pw</label>
+            <input id="pw" name="pw" type="password" placeholder="Password를 입력해주세요">
+            <button type="submit">로그인</button>
+        </form>
+    </body>
+</html>
+

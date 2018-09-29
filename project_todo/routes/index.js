@@ -9,6 +9,7 @@ var assert = require('assert');
 var config = require('./Modules/config.js');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var User = require('../models/user.js');
 
 mongoose.Promise = global.Promise;
 
@@ -34,6 +35,54 @@ function isLoggedIn(req, res, next) {
     }
 }
 
+router.get('/login', function(req,res,next){
+    if(req.session.logined)
+        res.render('logout',{session:req.session})
+    else {
+        res.render('login',{session:req.session});
+    }
+});
+
+router.post('/login',function(req,res,next){
+    var ermessage;
+    User.findOne({ 'email' : req.body.id }, function(err, user) {
+        if (err){
+            ermessage = "에러발생";
+        }
+        if (!user){
+            ermessage = "사용자 찾을 수 없음";
+        }
+        if (!user.validPassword(req.body.pw)){
+            ermessage = "비밀번호가 다름";
+        }
+        else{
+            req.session.regenerate(function(){
+                req.session.logined = true;
+                req.session.user_id = req.body.id;
+
+                res.render('test',{session: req.session, "title":ermessage});
+            })
+        }
+    });
+    /*
+    if(req.body.id == 'dalkom' && req.body.pw == 'itworld')
+        req.session.regenerate(function(){
+            req.session.logined = true;
+            req.session.user_id = req.body.id;
+
+            res.render('logout',{session: req.session});
+    })
+    */
+});
+
+router.post('/logout', function(req,res,next){
+    req.session.destroy();
+    res.redirect('/login');
+})
+
+
+
+/*
 router.post('/signup', passport.authenticate('signup', {
     successRedirect : '/profile', 
     failureRedirect : '/', //가입 실패시 redirect할 url주소
@@ -50,6 +99,7 @@ router.post('/login', passport.authenticate('login', {
 router.get('/profile', function(req, res, next) {
     res.render('test', { title: 'You are logged in.'  });
 });
+*/
 
 //map
 router.get('/map',function(req,res,next){
