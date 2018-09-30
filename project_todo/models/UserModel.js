@@ -16,5 +16,6 @@ var UserSchema = new Schema({
       default : Date.now()
   }
 });
-UserSchema.plugin( autoIncrement.plugin , { model : "user", field : "id" , startAt : 1 } );
+autoIncrement.initialize(mongoose.connection);
+UserSchema.plugin(autoIncrement.plugin , { model : "user", field : "id" , startAt : 1 } );
 module.exports = mongoose.model('user' , UserSchema);
